@@ -1,0 +1,154 @@
+{
+  "dataset": "heart-disease.csv",
+  "rows": 303,
+  "features": [
+    "age",
+    "sex",
+    "cp",
+    "trestbps",
+    "chol",
+    "fbs",
+    "restecg",
+    "thalach",
+    "exang",
+    "oldpeak",
+    "slope",
+    "ca",
+    "thal"
+  ],
+  "target_counts": {
+    "1": 165,
+    "0": 138
+  },
+  "split": {
+    "test_size": 0.2,
+    "random_state": 42,
+    "train_rows": 242,
+    "test_rows": 61
+  },
+  "search": {
+    "scoring": "f1",
+    "best_params": {
+      "lr__model__C": 10.0,
+      "lr__model__class_weight": null,
+      "weights": [
+        1,
+        2
+      ]
+    },
+    "best_cv_score_on_training_split": 0.8614903499697626
+  },
+  "original_model": {
+    "path": "heart_disease_model.joblib",
+    "sklearn_version_warnings": [
+      "Trying to unpickle estimator DecisionTreeClassifier from version 1.7.1 when using version 1.7.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:",
+      "Trying to unpickle estimator RandomForestClassifier from version 1.7.1 when using version 1.7.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:"
+    ],
+    "test_metrics": {
+      "accuracy": 0.8688524590163934,
+      "precision": 0.8529411764705882,
+      "recall": 0.90625,
+      "f1": 0.8787878787878788,
+      "roc_auc": 0.9364224137931034,
+      "confusion_matrix": [
+        [
+          24,
+          5
+        ],
+        [
+          3,
+          29
+        ]
+      ],
+      "classification_report": {
+        "0": {
+          "precision": 0.8888888888888888,
+          "recall": 0.8275862068965517,
+          "f1-score": 0.8571428571428571,
+          "support": 29.0
+        },
+        "1": {
+          "precision": 0.8529411764705882,
+          "recall": 0.90625,
+          "f1-score": 0.8787878787878788,
+          "support": 32.0
+        },
+        "accuracy": 0.8688524590163934,
+        "macro avg": {
+          "precision": 0.8709150326797386,
+          "recall": 0.8669181034482758,
+          "f1-score": 0.8679653679653679,
+          "support": 61.0
+        },
+        "weighted avg": {
+          "precision": 0.8700310725383049,
+          "recall": 0.8688524590163934,
+          "f1-score": 0.8684976225959832,
+          "support": 61.0
+        }
+      }
+    },
+    "reference_5_fold_cv_metrics": {
+      "accuracy": 0.8283060109289618,
+      "precision": 0.821603928406585,
+      "recall": 0.8848484848484848,
+      "f1": 0.8504312950901072,
+      "roc_auc": 0.9081128747795415
+    }
+  },
+  "improved_model": {
+    "path": "heart_disease_model_improved.joblib",
+    "model_type": "soft VotingClassifier(LogisticRegression pipeline + RandomForestClassifier)",
+    "test_metrics": {
+      "accuracy": 0.9016393442622951,
+      "precision": 0.90625,
+      "recall": 0.90625,
+      "f1": 0.90625,
+      "roc_auc": 0.9375,
+      "confusion_matrix": [
+        [
+          26,
+          3
+        ],
+        [
+          3,
+          29
+        ]
+      ],
+      "classification_report": {
+        "0": {
+          "precision": 0.896551724137931,
+          "recall": 0.896551724137931,
+          "f1-score": 0.896551724137931,
+          "support": 29.0
+        },
+        "1": {
+          "precision": 0.90625,
+          "recall": 0.90625,
+          "f1-score": 0.90625,
+          "support": 32.0
+        },
+        "accuracy": 0.9016393442622951,
+        "macro avg": {
+          "precision": 0.9014008620689655,
+          "recall": 0.9014008620689655,
+          "f1-score": 0.9014008620689655,
+          "support": 61.0
+        },
+        "weighted avg": {
+          "precision": 0.9016393442622951,
+          "recall": 0.9016393442622951,
+          "f1-score": 0.9016393442622951,
+          "support": 61.0
+        }
+      }
+    },
+    "five_fold_cv_metrics": {
+      "accuracy": 0.8646994535519126,
+      "precision": 0.8568532818532819,
+      "recall": 0.9151515151515153,
+      "f1": 0.8828442146089206,
+      "roc_auc": 0.9204264870931539
+    }
+  }
+}
