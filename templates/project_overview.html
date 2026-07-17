@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Project Overview</title>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body class="overview-page">
+    <nav class="site-nav compact-nav">
+      <a class="brand-lockup" href="{{ url_for('index') }}">
+        <span class="brand-mark">H</span>
+        <span>Heart Risk AI</span>
+      </a>
+      <div class="nav-actions">
+        <label class="theme-switch" aria-label="Toggle dark theme">
+          <input type="checkbox" data-theme-toggle>
+          <span class="theme-track">
+            <span>L</span>
+            <span>D</span>
+          </span>
+        </label>
+        <a class="nav-link-button" href="{{ url_for('download_project_overview') }}">Download TXT</a>
+      </div>
+    </nav>
+
+    <main class="overview-shell">
+      <section class="overview-hero">
+        <div>
+          <p class="eyebrow">Lab Report View</p>
+          <h1>{{ lab_report.title }}</h1>
+          <p>{{ lab_report.subtitle }} from <strong>{{ lab_report.source }}</strong>, arranged into readable sections for easy understanding.</p>
+        </div>
+        <div class="overview-stats">
+          <div>
+            <span>Sections</span>
+            <strong>{{ lab_report.section_count }}</strong>
+          </div>
+          <div>
+            <span>Words</span>
+            <strong>{{ lab_report.word_count }}</strong>
+          </div>
+          <div>
+            <span>Model</span>
+            <strong>{{ "%.1f"|format((report.test_metrics.accuracy or 0) * 100) }}%</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="overview-layout">
+        <aside class="overview-toc">
+          <div class="toc-panel">
+            <p class="eyebrow">Contents</p>
+            <nav>
+              {% for section in lab_report.sections %}
+                <a href="#{{ section.anchor }}">
+                  <span>{{ section.number }}</span>
+                  {{ section.title }}
+                </a>
+              {% endfor %}
+            </nav>
+          </div>
+        </aside>
+
+        <article class="overview-document">
+          <section class="report-card intro-card">
+            {% for block in lab_report.intro_blocks %}
+              {% if block.type == "label" %}
+                <h3>{{ block["text"] }}</h3>
+              {% elif block.type == "list" %}
+                <ul>
+                  {% for item in block["items"] %}
+                    <li>{{ item }}</li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <p>{{ block["text"] }}</p>
+              {% endif %}
+            {% endfor %}
+          </section>
+
+          {% for section in lab_report.sections %}
+            <section class="report-card" id="{{ section.anchor }}">
+              <div class="report-section-heading">
+                <span>{{ section.number }}</span>
+                <h2>{{ section.title }}</h2>
+              </div>
+
+              {% for block in section.blocks %}
+                {% if block.type == "label" %}
+                  <h3>{{ block["text"] }}</h3>
+                {% elif block.type == "list" %}
+                  <ul>
+                    {% for item in block["items"] %}
+                      <li>{{ item }}</li>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                  <p>{{ block["text"] }}</p>
+                {% endif %}
+              {% endfor %}
+            </section>
+          {% endfor %}
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

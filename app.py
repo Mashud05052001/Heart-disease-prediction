@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from pathlib import Path
 from typing import Any
 
 import joblib
 import pandas as pd
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_file
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -16,6 +17,8 @@ MODEL_CANDIDATES = [
     BASE_DIR / "heart_disease_model.joblib",
 ]
 REPORT_PATH = BASE_DIR / "model_report.json"
+LAB_REPORT_PATH = BASE_DIR / "Heart_Disease_Model_Lab_Report_Details.txt"
+SECTION_HEADING_PATTERN = re.compile(r"^(\d+)\.\s+(.+)$")
 
 FEATURES = [
     "age",
@@ -127,6 +130,24 @@ def create_app() -> Flask:
             samples=SAMPLE_PROFILES,
         )
 
+    @app.get("/project-overview")
+    def project_overview_page():
+        return render_template(
+            "project_overview.html",
+            lab_report=load_lab_report(),
+            model_name=model_path.name,
+            report=report,
+        )
+
+    @app.get("/project-overview/download")
+    def download_project_overview():
+        return send_file(
+            LAB_REPORT_PATH,
+            as_attachment=True,
+            download_name=LAB_REPORT_PATH.name,
+            mimetype="text/plain",
+        )
+
     @app.get("/health")
     def health():
         return jsonify({"ok": True, "model": model_path.name})
@@ -156,6 +177,101 @@ def create_app() -> Flask:
         )
 
     return app
+
+
+def load_lab_report() -> dict[str, Any]:
+    if not LAB_REPORT_PATH.exists():
+        return {
+            "title": "Heart Disease Prediction Model",
+            "subtitle": "Lab Report Details",
+            "source": LAB_REPORT_PATH.name,
+            "intro_blocks": [{"type": "paragraph", "text": "The lab report text file was not found."}],
+            "sections": [],
+            "section_count": 0,
+            "word_count": 0,
+        }
+
+    text = LAB_REPORT_PATH.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    intro_lines: list[str] = []
+    sections: list[dict[str, Any]] = []
+    current_section: dict[str, Any] | None = None
+
+    for line in lines:
+        heading_match = SECTION_HEADING_PATTERN.match(line.strip())
+        if heading_match and heading_match.group(2).isupper():
+            if current_section is not None:
+                current_section["blocks"] = make_report_blocks(current_section.pop("body_lines"))
+                sections.append(current_section)
+            current_section = {
+                "number": heading_match.group(1),
+                "title": heading_match.group(2).title(),
+                "anchor": f"section-{heading_match.group(1)}",
+                "body_lines": [],
+            }
+            continue
+
+        if current_section is None:
+            intro_lines.append(line)
+        else:
+            current_section["body_lines"].append(line)
+
+    if current_section is not None:
+        current_section["blocks"] = make_report_blocks(current_section.pop("body_lines"))
+        sections.append(current_section)
+
+    return {
+        "title": "Heart Disease Prediction Model",
+        "subtitle": "Lab Report Details",
+        "source": LAB_REPORT_PATH.name,
+        "intro_blocks": make_report_blocks(intro_lines),
+        "sections": sections,
+        "section_count": len(sections),
+        "word_count": len(re.findall(r"\b\w+\b", text)),
+    }
+
+
+def make_report_blocks(lines: list[str]) -> list[dict[str, Any]]:
+    blocks: list[dict[str, Any]] = []
+    paragraph_lines: list[str] = []
+    list_items: list[str] = []
+
+    def flush_paragraph() -> None:
+        if not paragraph_lines:
+            return
+        text = " ".join(line.strip() for line in paragraph_lines).strip()
+        paragraph_lines.clear()
+        if not text:
+            return
+        if text.endswith(":") and len(text) <= 90:
+            blocks.append({"type": "label", "text": text})
+        else:
+            blocks.append({"type": "paragraph", "text": text})
+
+    def flush_list() -> None:
+        if not list_items:
+            return
+        blocks.append({"type": "list", "items": list_items.copy()})
+        list_items.clear()
+
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            flush_paragraph()
+            flush_list()
+            continue
+
+        if stripped.startswith("- "):
+            flush_paragraph()
+            list_items.append(stripped[2:])
+            continue
+
+        flush_list()
+        paragraph_lines.append(stripped)
+
+    flush_paragraph()
+    flush_list()
+    return blocks
 
 
 def load_report() -> dict[str, Any]:

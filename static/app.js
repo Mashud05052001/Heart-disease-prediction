@@ -11,6 +11,7 @@ const ctx = canvas.getContext("2d");
 const defaultProfile = window.SAMPLE_PROFILES.balanced;
 let currentWaveProbability = 0.5;
 let currentWaveColor = "#10836f";
+let livePredictionTimer;
 
 function setFormValues(profile) {
   Object.entries(profile).forEach(([name, value]) => {
@@ -45,6 +46,45 @@ function collectFormValues() {
     ca: Number(form.elements.ca.value),
     thal: Number(form.elements.thal.value),
   };
+}
+
+function hasCompleteFormValues() {
+  const fields = [
+    "age",
+    "sex",
+    "cp",
+    "trestbps",
+    "chol",
+    "fbs",
+    "restecg",
+    "thalach",
+    "exang",
+    "oldpeak",
+    "slope",
+    "ca",
+    "thal",
+  ];
+
+  return fields.every((name) => {
+    const field = form.elements[name];
+    if (!field) return false;
+    if (field instanceof RadioNodeList) {
+      return Boolean(field.value);
+    }
+    return String(field.value).trim() !== "";
+  });
+}
+
+function scheduleLivePrediction() {
+  window.clearTimeout(livePredictionTimer);
+  livePredictionTimer = window.setTimeout(async () => {
+    if (!hasCompleteFormValues()) return;
+    try {
+      await predict();
+    } catch (error) {
+      showError(error.message);
+    }
+  }, 350);
 }
 
 function syncRangeInputs() {
@@ -172,6 +212,18 @@ document.querySelectorAll("[data-sample]").forEach((button) => {
       showError(error.message);
     }
   });
+});
+
+form.addEventListener("input", (event) => {
+  if (event.target.closest("[data-range-for], input[type='number']")) {
+    scheduleLivePrediction();
+  }
+});
+
+form.addEventListener("change", (event) => {
+  if (event.target.matches("select, input[type='radio']")) {
+    scheduleLivePrediction();
+  }
 });
 
 form.addEventListener("submit", async (event) => {
