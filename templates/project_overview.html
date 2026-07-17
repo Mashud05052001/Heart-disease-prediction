@@ -30,7 +30,7 @@
         <div>
           <p class="eyebrow">Lab Report View</p>
           <h1>{{ lab_report.title }}</h1>
-          <p>{{ lab_report.subtitle }} from <strong>{{ lab_report.source }}</strong>, arranged into readable sections for easy understanding.</p>
+          <p>{{ lab_report.subtitle }} from <strong>{{ lab_report.source }}</strong>, with the dataset source shown clearly for reproducibility.</p>
         </div>
         <div class="overview-stats">
           <div>
@@ -64,6 +64,18 @@
         </aside>
 
         <article class="overview-document">
+          <section class="report-card source-card">
+            <div>
+              <p class="eyebrow">Dataset Source</p>
+              <h2>{{ dataset_source.name }}</h2>
+              <p>{{ dataset_source.description }}</p>
+            </div>
+            <div class="source-actions">
+              <a class="source-link" href="{{ dataset_source.url }}" target="_blank" rel="noreferrer">Open Hugging Face Source</a>
+              <span>License: {{ dataset_source.license }}</span>
+            </div>
+          </section>
+
           <section class="report-card intro-card">
             {% for block in lab_report.intro_blocks %}
               {% if block.type == "label" %}

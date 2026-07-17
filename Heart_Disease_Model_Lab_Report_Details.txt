@@ -67,6 +67,21 @@ classification problem.
 Dataset file name:
 heart-disease.csv
 
+Dataset/model source:
+Hugging Face - BrejBala/Heart-Disease-Prediction
+
+Source URL:
+https://huggingface.co/BrejBala/Heart-Disease-Prediction
+
+Source note:
+The local heart-disease.csv file used in this project was taken from this
+Hugging Face repository/model card. The source page documents the same tabular
+heart-disease data shape used here: 303 rows, 14 columns, 13 input features, and
+one target column.
+
+Source license:
+MIT, as listed on the Hugging Face repository page.
+
 Number of rows:
 303
 
@@ -518,7 +533,8 @@ changes for different model outputs.
 Important model-related files:
 
 1. heart-disease.csv
-   This is the dataset.
+   This is the dataset. It was sourced from the Hugging Face repository:
+   https://huggingface.co/BrejBala/Heart-Disease-Prediction
 
 2. heart_disease_model.joblib
    This is the original saved Random Forest model.
@@ -814,4 +830,3 @@ The project is useful for understanding the complete machine learning workflow:
 
 Overall, this is a complete educational machine learning project that combines
 data science, model development, and web application design.
-

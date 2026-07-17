@@ -19,7 +19,7 @@ Important: this project is for education and demonstration only. It is not a med
 
 This project includes:
 
-- `heart-disease.csv` dataset with 303 rows and 14 columns.
+- `heart-disease.csv` dataset with 303 rows and 14 columns, sourced from Hugging Face.
 - Two saved model artifacts: `heart_disease_model.joblib` and `heart_disease_model_improved.joblib`.
 - A Flask web app that loads the improved model by default.
 - A prediction page that accepts 13 clinical features and returns a prediction plus probability.
@@ -43,6 +43,14 @@ This project includes:
 Dataset file:
 
 `heart-disease.csv`
+
+Dataset/model source:
+
+[BrejBala/Heart-Disease-Prediction on Hugging Face](https://huggingface.co/BrejBala/Heart-Disease-Prediction)
+
+Source note:
+
+The local `heart-disease.csv` file used for training and evaluation comes from the Hugging Face repository/model card above. The source page documents the same tabular heart-disease data shape used in this project: `303` rows, `14` columns, `13` input features, and one `target` column. The Hugging Face repository is listed with the MIT license.
 
 Dataset shape:
 
@@ -186,6 +194,8 @@ The improved model reduced false positives from `5` to `3` while keeping false n
 | `/project-overview/download` | Downloads the original lab-report text file. |
 | `/predict` | JSON API endpoint used by the prediction page. |
 | `/health` | Health check endpoint. |
+
+The `/project-overview` page also highlights the Hugging Face dataset/model source used for `heart-disease.csv`.
 
 ## GUI Details
 

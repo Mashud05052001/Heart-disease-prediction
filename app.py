@@ -19,6 +19,15 @@ MODEL_CANDIDATES = [
 REPORT_PATH = BASE_DIR / "model_report.json"
 LAB_REPORT_PATH = BASE_DIR / "Heart_Disease_Model_Lab_Report_Details.txt"
 SECTION_HEADING_PATTERN = re.compile(r"^(\d+)\.\s+(.+)$")
+DATASET_SOURCE = {
+    "name": "BrejBala/Heart-Disease-Prediction",
+    "url": "https://huggingface.co/BrejBala/Heart-Disease-Prediction",
+    "license": "MIT",
+    "description": (
+        "Hugging Face repository/model card used as the source for the local "
+        "heart-disease.csv dataset."
+    ),
+}
 
 FEATURES = [
     "age",
@@ -137,6 +146,7 @@ def create_app() -> Flask:
             lab_report=load_lab_report(),
             model_name=model_path.name,
             report=report,
+            dataset_source=DATASET_SOURCE,
         )
 
     @app.get("/project-overview/download")
