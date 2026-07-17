@@ -1,246 +1,312 @@
----
-language: en
-license: mit
-library_name: scikit-learn
-pipeline_tag: tabular-classification
-tags:
-  - scikit-learn
-  - tabular-classification
-  - machine-learning
-  - healthcare
-  - heart-disease
-  - cardiovascular
-  - binary-classification
-  - random-forest
-metrics:
-  - accuracy
-  - precision
-  - recall
-  - f1
-model-index:
-  - name: Heart Disease Prediction (RandomForestClassifier)
-    results:
-      - task:
-          type: tabular-classification
-          name: Tabular Classification
-        dataset:
-          name: heart-disease.csv (included in project repo)
-          type: csv
-        metrics:
-          - name: Test Accuracy
-            type: accuracy
-            value: 0.87
-          - name: 5-fold CV Accuracy (mean)
-            type: accuracy
-            value: 0.8479781421
-          - name: 5-fold CV Precision (mean)
-            type: precision
-            value: 0.8215873016
-          - name: 5-fold CV Recall (mean)
-            type: recall
-            value: 0.9272727273
-          - name: 5-fold CV F1 (mean)
-            type: f1
-            value: 0.8705403543
----
+# Heart Disease Prediction Web App
 
-# ❤️ Heart Disease Prediction (scikit-learn Random Forest)
+A complete machine learning project for heart disease prediction using a tabular medical dataset, an improved scikit-learn model, and a polished Flask web interface.
 
-A classic machine learning model that predicts the likelihood of **heart disease** from structured patient medical attributes (tabular data).  
-This repository contains a **joblib-serialized scikit-learn model** trained and evaluated in an end-to-end Jupyter Notebook workflow.
+The app predicts whether a patient profile is closer to the `0 = no heart disease` class or the `1 = heart disease present` class. It also shows the estimated probability of heart disease.
 
-## Model Details
+Important: this project is for education and demonstration only. It is not a medical device and must not be used for real clinical diagnosis.
 
-- **Developed by:** brej-29
-- **Model type:** `RandomForestClassifier` (scikit-learn)
-- **Task:** Binary classification (tabular)
-- **Output labels:**
-  - `0` → No heart disease
-  - `1` → Heart disease present
-- **Saved artifact:** `heart_disease_model.joblib`
-- **Training notebook:** `HeartDiseasePredictionProject.ipynb`
-- **Source code / project repo:** https://github.com/brej-29/Logicmojo-AIML-Assignments-heart-disease-prediction-ml
-- **License:** MIT
+## Live Website
 
-## Intended Use
+| Page | Live URL | Description |
+|---|---|---|
+| Home | https://heart-disease-prediction-livid.vercel.app/ | Main landing page with project summary, model metrics, and navigation to prediction. |
+| Project Overview | https://heart-disease-prediction-livid.vercel.app/project-overview | Web version of the lab report and project details, shown side by side with the live app description. |
+| Prediction | https://heart-disease-prediction-livid.vercel.app/prediction | Interactive prediction interface for entering patient values and seeing the model result. |
+| Health Check | https://heart-disease-prediction-livid.vercel.app/health | Simple endpoint to confirm the app and model are running. |
 
-### Direct Use
-- Educational / portfolio demonstration of an end-to-end ML pipeline:
-  - EDA → modeling → hyperparameter tuning → evaluation → persistence
-- Research prototyping and experimentation with classical ML on healthcare-like tabular data
+## Project Overview
 
-### Out-of-Scope Use (Important)
-- **Not for clinical diagnosis**
-- **Not a medical device**
-- **Not validated for real-world patient care**
-- Do not use this model as the sole basis for medical decisions.
+This project includes:
 
-## Training Data
+- `heart-disease.csv` dataset with 303 rows and 14 columns.
+- Two saved model artifacts: `heart_disease_model.joblib` and `heart_disease_model_improved.joblib`.
+- A Flask web app that loads the improved model by default.
+- A prediction page that accepts 13 clinical features and returns a prediction plus probability.
+- A dedicated `/project-overview` page that presents the lab report content in a readable web format.
 
-The model was trained on a tabular dataset included in the project repository as `heart-disease.csv`.
+## Project Features
 
-- **Rows:** 303
-- **Columns:** 14
-  - **Features:** 13
-  - **Target:** 1 (`target`)
-- **Target distribution:**
-  - `1`: 165
-  - `0`: 138
+- Heart disease prediction from 13 clinical input features.
+- Improved model saved as `heart_disease_model_improved.joblib`.
+- Original model preserved as `heart_disease_model.joblib`.
+- Live prediction result updates automatically when input values change.
+- Manual `Predict Risk` button remains available.
+- `Low`, `Medium`, and `High` sample profiles are based on real dataset rows and produce different risk outputs.
+- Light and dark theme support.
+- Homepage with model summary and performance metrics.
+- `/project-overview` page that renders the lab-report text file in a readable web format.
+- Download option for the lab-report `.txt` file.
 
-### Features (Input Schema)
+## Dataset
 
-The model expects **13 columns**:
+Dataset file:
 
-| Feature | Description |
+`heart-disease.csv`
+
+Dataset shape:
+
+- Rows: `303`
+- Columns: `14`
+- Input features: `13`
+- Target column: `target`
+
+Target labels:
+
+- `0` = No heart disease
+- `1` = Heart disease present
+
+Target distribution:
+
+- `1`: `165`
+- `0`: `138`
+
+## Input Features
+
+| Feature | Meaning |
 |---|---|
 | `age` | Age in years |
-| `sex` | Sex (commonly encoded as 1 = male, 0 = female) |
-| `cp` | Chest pain type (categorical encoded as integers) |
+| `sex` | Encoded sex value, commonly `1 = male`, `0 = female` |
+| `cp` | Chest pain type, encoded as integers |
 | `trestbps` | Resting blood pressure |
 | `chol` | Serum cholesterol |
-| `fbs` | Fasting blood sugar (binary) |
-| `restecg` | Resting ECG results (categorical encoded as integers) |
+| `fbs` | Fasting blood sugar, binary encoded |
+| `restecg` | Resting ECG result, encoded as integers |
 | `thalach` | Maximum heart rate achieved |
-| `exang` | Exercise-induced angina (binary) |
+| `exang` | Exercise-induced angina, binary encoded |
 | `oldpeak` | ST depression induced by exercise relative to rest |
-| `slope` | Slope of peak exercise ST segment (categorical encoded as integers) |
-| `ca` | Number of major vessels (categorical encoded as integers) |
-| `thal` | Thalassemia category (categorical encoded as integers) |
+| `slope` | Slope of the peak exercise ST segment |
+| `ca` | Number of major vessels, encoded |
+| `thal` | Thalassemia category, encoded |
 
-## Training Procedure
+The categorical values must use the same encoding as the training dataset.
 
-### Data Split
-- `train_test_split(test_size=0.2)`
-- Randomness controlled via `np.random.seed(42)` in the notebook
+## Model Information
 
-### Candidate Models Explored
-- Logistic Regression
-- K-Nearest Neighbors (KNN)
-- Random Forest
+### Original Model
 
-### Hyperparameter Tuning
-- `RandomizedSearchCV` used to tune Random Forest
-  - `cv=5`, `n_iter=20`
-- Best Random Forest hyperparameters found in the notebook:
-  - `n_estimators=210`
-  - `max_depth=3`
-  - `min_samples_split=4`
-  - `min_samples_leaf=19`
+File:
 
-### Final Model
-The saved model (`heart_disease_model.joblib`) corresponds to:
+`heart_disease_model.joblib`
 
-- `RandomForestClassifier(n_estimators=210, max_depth=3, min_samples_split=4, min_samples_leaf=19)`
+Model type:
 
-## Evaluation
+`RandomForestClassifier`
 
-### Baseline Test Accuracy (single 80/20 split)
-- KNN: ~0.689
-- Logistic Regression: ~0.885
-- Random Forest: ~0.836
+Main hyperparameters:
 
-### Final Model Performance
-- **Loaded saved model test accuracy:** **0.87**
+- `n_estimators = 210`
+- `max_depth = 3`
+- `min_samples_split = 4`
+- `min_samples_leaf = 19`
 
-### Cross-Validated Metrics (5-fold mean) — Final Random Forest
-- **Accuracy:** 0.8479781421
-- **Precision:** 0.8215873016
-- **Recall:** 0.9272727273
-- **F1:** 0.8705403543
+### Improved Model
 
-Note: The notebook also visualizes confusion matrices and ROC curves for model comparison.
+File:
 
-## How to Use
+`heart_disease_model_improved.joblib`
 
-### 1) Install dependencies
-- `pip install scikit-learn joblib pandas numpy huggingface_hub`
+Model type:
 
-### Local Run and Improvement Scripts
-```bash
-pip install -r requirements.txt
+`Soft VotingClassifier(LogisticRegression pipeline + RandomForestClassifier)`
 
-python run_model.py --model heart_disease_model.joblib
-python train_improved_model.py
-python run_model.py --model heart_disease_model_improved.joblib
+The improved model combines:
+
+- A Logistic Regression pipeline with preprocessing.
+- A tuned Random Forest classifier.
+
+The Logistic Regression pipeline includes:
+
+- Median imputation and scaling for numeric columns.
+- Most-frequent imputation and one-hot encoding for categorical columns.
+
+The improved model is the default model used by the web app.
+
+## Model Performance
+
+The models were evaluated using the same 80/20 train-test split:
+
+- Training rows: `242`
+- Test rows: `61`
+- Random state: `42`
+
+### Original Saved Model
+
+| Metric | Value |
+|---|---:|
+| Accuracy | `0.8689` |
+| Precision | `0.8529` |
+| Recall | `0.9062` |
+| F1 score | `0.8788` |
+| ROC-AUC | `0.9364` |
+
+Confusion matrix:
+
+```text
+[[24, 5],
+ [ 3, 29]]
 ```
 
-`train_improved_model.py` leaves the original model untouched and saves an improved local artifact as `heart_disease_model_improved.joblib`, plus a metrics report in `model_report.json`.
+### Improved Model
 
-### Local GUI
+| Metric | Value |
+|---|---:|
+| Accuracy | `0.9016` |
+| Precision | `0.9062` |
+| Recall | `0.9062` |
+| F1 score | `0.9062` |
+| ROC-AUC | `0.9375` |
+
+Confusion matrix:
+
+```text
+[[26, 3],
+ [ 3, 29]]
+```
+
+The improved model reduced false positives from `5` to `3` while keeping false negatives at `3` on the holdout test split.
+
+### Improved Model 5-Fold Cross-Validation
+
+| Metric | Mean Value |
+|---|---:|
+| Accuracy | `0.8647` |
+| Precision | `0.8569` |
+| Recall | `0.9152` |
+| F1 score | `0.8828` |
+| ROC-AUC | `0.9204` |
+
+## Web App Pages
+
+| Route | Description |
+|---|---|
+| `/` | Homepage with project introduction, hero visual, and model summary. |
+| `/prediction` | Main prediction interface. Users can enter values and see instant model output. |
+| `/project-overview` | Web formatted lab-report page generated from `Heart_Disease_Model_Lab_Report_Details.txt`. |
+| `/project-overview/download` | Downloads the original lab-report text file. |
+| `/predict` | JSON API endpoint used by the prediction page. |
+| `/health` | Health check endpoint. |
+
+## GUI Details
+
+The frontend is built with HTML, CSS, and JavaScript using Flask templates.
+
+Important UI files:
+
+- `templates/index.html`
+- `templates/prediction.html`
+- `templates/project_overview.html`
+- `static/style.css`
+- `static/app.js`
+- `static/home.js`
+- `static/theme.js`
+
+GUI features:
+
+- Separate homepage and prediction page.
+- Direct `/project-overview` page for lab-report explanation.
+- Light/dark theme toggle.
+- Instant prediction when any input value changes.
+- Manual prediction button remains available.
+- Reset button restores default sample values.
+- ECG-style visual canvas on the prediction result panel.
+- Probability gauge for heart disease likelihood.
+- Model performance summary cards.
+
+## Local Installation
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the Flask app locally:
+
 ```bash
 python app.py
 ```
 
-Open `http://127.0.0.1:5000` in your browser for the homepage, then choose **Start Prediction** to open `http://127.0.0.1:5000/prediction`. The GUI uses `heart_disease_model_improved.joblib` when it is available, and falls back to the original saved model otherwise.
+Open:
 
-### 2) Load the model from Hugging Face Hub
-```python
-from huggingface_hub import hf_hub_download
-import joblib
-import pandas as pd
-
-# Replace with your HF repo id, e.g. "brej-29/heart-disease-prediction-rf"
-repo_id = "YOUR_USERNAME/YOUR_MODEL_REPO"
-
-model_path = hf_hub_download(
-    repo_id=repo_id,
-    filename="heart_disease_model.joblib"
-)
-
-model = joblib.load(model_path)
-
-# Example input (values are placeholders; use correctly-encoded values)
-sample = pd.DataFrame([{
-    "age": 57,
-    "sex": 1,
-    "cp": 0,
-    "trestbps": 120,
-    "chol": 354,
-    "fbs": 0,
-    "restecg": 1,
-    "thalach": 163,
-    "exang": 1,
-    "oldpeak": 0.6,
-    "slope": 2,
-    "ca": 0,
-    "thal": 2
-}])
-
-pred = model.predict(sample)[0]
-proba = model.predict_proba(sample)[0, 1]  # probability of class "1"
-
-print("Prediction:", int(pred))
-print("P(heart disease):", float(proba))
+```text
+http://127.0.0.1:5000
 ```
-## Input Requirements
 
-- Provide all 13 feature columns  
-- Ensure categorical features (`cp`, `restecg`, `slope`, `ca`, `thal`) follow the same integer encoding as used in training  
-- Numeric types should be valid numbers (`int`/`float`); no missing values  
+## Run Model Scripts
 
-## Bias, Risks, and Limitations
+Evaluate the original model:
 
-- Small dataset (303 rows) → results may not generalize to broader populations  
-- Encoding-dependent: categorical values must match training conventions  
-- No clinical validation: metrics are from offline evaluation only  
-- False negatives are possible (missed risk) — do not use for medical screening without rigorous validation  
+```bash
+python run_model.py --model heart_disease_model.joblib
+```
 
-## Environmental Impact
+Train the improved model:
 
-Training and evaluation were performed using classical ML methods on a small tabular dataset and are expected to have minimal compute and carbon impact (CPU-only, short runtime).
+```bash
+python train_improved_model.py
+```
 
-## Technical Specifications
+Evaluate the improved model:
 
-- Framework: scikit-learn  
-- Model format: joblib (`heart_disease_model.joblib`)  
-- Inference type: CPU-friendly tabular prediction  
+```bash
+python run_model.py --model heart_disease_model_improved.joblib
+```
 
-## Model Card Authors
+## Deployment Files
 
-- BrejBala
+The project includes deployment helper files:
 
-## Contact
+- `requirements.txt`
+- `Procfile`
+- `runtime.txt`
+- `wsgi.py`
+- `render.yaml`
 
-For questions/feedback, please open an issue on the GitHub repository:  
-https://github.com/brej-29/Logicmojo-AIML-Assignments-heart-disease-prediction-ml
-# Heart-disease-prediction
+Typical production start command:
+
+```bash
+gunicorn app:app
+```
+Files required at runtime:
+
+- `heart_disease_model_improved.joblib`
+- `heart_disease_model.joblib`
+- `model_report.json`
+- `Heart_Disease_Model_Lab_Report_Details.txt`
+- `templates/`
+- `static/`
+
+## Important Limitations
+
+- The dataset is small, with only `303` rows.
+- The model is not clinically validated.
+- The project is not a medical device.
+- False positives and false negatives are possible.
+- Encoded categorical values must match the dataset encoding.
+- The result should be treated as a machine learning demonstration, not a medical diagnosis.
+
+## Medical Disclaimer
+
+This project is for learning, research practice, and portfolio demonstration only.
+
+Do not use this app as the only basis for health decisions. If a person has chest pain, breathing difficulty, or any health concern, they should contact a qualified doctor or medical professional.
+
+## Main Project Files
+
+| File | Purpose |
+|---|---|
+| `app.py` | Main Flask backend and routes. |
+| `heart-disease.csv` | Dataset used for training and evaluation. |
+| `heart_disease_model.joblib` | Original saved Random Forest model. |
+| `heart_disease_model_improved.joblib` | Improved saved model used by the app. |
+| `train_improved_model.py` | Trains and saves the improved model. |
+| `run_model.py` | Evaluates a saved model from the command line. |
+| `model_report.json` | Stores model metrics and training details. |
+| `Heart_Disease_Model_Lab_Report_Details.txt` | Detailed lab-report explanation. |
+| `templates/` | HTML pages. |
+| `static/` | CSS and JavaScript files. |
+
+## License
+
+MIT
