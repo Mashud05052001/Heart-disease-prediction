@@ -9,6 +9,8 @@ const canvas = document.querySelector("#ecgCanvas");
 const ctx = canvas.getContext("2d");
 
 const defaultProfile = window.SAMPLE_PROFILES.balanced;
+let currentWaveProbability = 0.5;
+let currentWaveColor = "#10836f";
 
 function setFormValues(profile) {
   Object.entries(profile).forEach(([name, value]) => {
@@ -74,6 +76,8 @@ function updateResult(data) {
   gaugeRing.style.setProperty("--score", `${percent}%`);
   gaugeRing.style.setProperty("--risk-color", color);
   gaugeRing.dataset.tone = data.risk.tone;
+  currentWaveProbability = probability;
+  currentWaveColor = color;
 
   signalList.innerHTML = "";
   data.signals.forEach((signal) => {
@@ -107,12 +111,15 @@ function drawWave(probability = 0.5, color = "#10836f") {
   const height = canvas.height;
   const center = height * 0.52;
   const amplitude = 9 + probability * 20;
+  const styles = getComputedStyle(document.documentElement);
+  const canvasBg = styles.getPropertyValue("--canvas-bg").trim() || "#f8fafc";
+  const canvasGrid = styles.getPropertyValue("--canvas-grid").trim() || "#dbe3ea";
 
   ctx.clearRect(0, 0, width, height);
-  ctx.fillStyle = "#f8fafc";
+  ctx.fillStyle = canvasBg;
   ctx.fillRect(0, 0, width, height);
 
-  ctx.strokeStyle = "#dbe3ea";
+  ctx.strokeStyle = canvasGrid;
   ctx.lineWidth = 1;
   for (let x = 0; x < width; x += 24) {
     ctx.beginPath();
@@ -186,6 +193,10 @@ resetButton.addEventListener("click", async () => {
   } catch (error) {
     showError(error.message);
   }
+});
+
+window.addEventListener("themechange", () => {
+  drawWave(currentWaveProbability, currentWaveColor);
 });
 
 syncRangeInputs();

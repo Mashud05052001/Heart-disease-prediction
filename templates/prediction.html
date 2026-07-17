@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Predict Heart Disease Risk</title>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body class="predict-page">
@@ -13,6 +14,13 @@
         <span>Heart Risk AI</span>
       </a>
       <div class="nav-actions">
+        <label class="theme-switch" aria-label="Toggle dark theme">
+          <input type="checkbox" data-theme-toggle>
+          <span class="theme-track">
+            <span>L</span>
+            <span>D</span>
+          </span>
+        </label>
         <a class="nav-link-button" href="{{ url_for('index') }}">Home</a>
       </div>
     </nav>
@@ -29,17 +37,42 @@
         </div>
       </header>
 
+      <section class="prediction-hero-panel">
+        <div>
+          <p class="eyebrow">Inference Workspace</p>
+          <h2>Fast local prediction with the improved ensemble</h2>
+          <p>
+            Enter the 13 dataset-aligned clinical fields, choose a sample profile when useful, and review the probability output beside the form.
+          </p>
+        </div>
+        <div class="prediction-stat-strip">
+          <div>
+            <span>Accuracy</span>
+            <strong>{{ "%.1f"|format((report.test_metrics.accuracy or 0) * 100) }}%</strong>
+          </div>
+          <div>
+            <span>Recall</span>
+            <strong>{{ "%.1f"|format((report.test_metrics.recall or 0) * 100) }}%</strong>
+          </div>
+          <div>
+            <span>ROC-AUC</span>
+            <strong>{{ "%.1f"|format((report.test_metrics.roc_auc or 0) * 100) }}%</strong>
+          </div>
+        </div>
+      </section>
+
       <main class="workspace">
         <form id="predictionForm" class="input-panel">
           <section class="panel-heading">
             <div>
               <p class="eyebrow">Patient Inputs</p>
               <h2>Profile</h2>
+              <p class="panel-copy">Vitals, ECG, exercise, and encoded clinical categories.</p>
             </div>
             <div class="preset-row" aria-label="Sample profiles">
               <button type="button" class="ghost-button" data-sample="lower">Low</button>
-              <button type="button" class="ghost-button" data-sample="balanced">Median</button>
-              <button type="button" class="ghost-button" data-sample="elevated">Elevated</button>
+              <button type="button" class="ghost-button" data-sample="balanced">Medium</button>
+              <button type="button" class="ghost-button" data-sample="elevated">High</button>
             </div>
           </section>
 
@@ -157,6 +190,10 @@
         </form>
 
         <aside class="result-panel" aria-live="polite">
+          <div class="result-topline">
+            <span class="status-dot"></span>
+            <span>Live Inference</span>
+          </div>
           <div class="ecg-strip">
             <canvas id="ecgCanvas" width="620" height="150"></canvas>
           </div>

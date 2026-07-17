@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Heart Disease Risk Console</title>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body class="home-page">
@@ -13,6 +14,13 @@
         <span>Heart Risk AI</span>
       </a>
       <div class="nav-actions">
+        <label class="theme-switch" aria-label="Toggle dark theme">
+          <input type="checkbox" data-theme-toggle>
+          <span class="theme-track">
+            <span>L</span>
+            <span>D</span>
+          </span>
+        </label>
         <a class="nav-link-button" href="{{ url_for('prediction_page') }}">Open Predictor</a>
       </div>
     </nav>
@@ -50,20 +58,21 @@
       </section>
 
       <section class="home-band model-summary" id="model-summary">
-        <div class="section-heading">
+        <div class="section-heading model-summary-heading">
           <div>
             <p class="eyebrow">Model Summary</p>
             <h2>Improved ensemble with transparent evaluation</h2>
           </div>
           <p class="section-copy">
-            Metrics come from the local report generated after training. The active artifact combines a logistic-regression pipeline with a tuned random forest.
+            A compact view of the trained artifact, dataset size, holdout test result, cross-validation result, and confusion matrix.
           </p>
         </div>
 
         <div class="summary-layout">
           <article class="summary-card summary-primary">
             <span class="summary-label">Active Model</span>
-            <h3>{{ report.model_path or model_name }}</h3>
+            <h3>Improved Soft-Voting Model</h3>
+            <p class="artifact-name">{{ report.model_path or model_name }}</p>
             <p>{{ report.model_type }}</p>
             <div class="summary-meta">
               <div>

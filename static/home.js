@@ -1,6 +1,10 @@
 const heroCanvas = document.querySelector("#heroCanvas");
 const heroContext = heroCanvas.getContext("2d");
 
+function cssVar(name, fallback) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+}
+
 function resizeHeroCanvas() {
   const rect = heroCanvas.getBoundingClientRect();
   const ratio = window.devicePixelRatio || 1;
@@ -23,18 +27,18 @@ function roundedRect(ctx, x, y, width, height, radius) {
   ctx.closePath();
 }
 
-function drawMonitorCard(ctx, x, y, width, height, phase) {
+function drawMonitorCard(ctx, x, y, width, height, phase, colors) {
   roundedRect(ctx, x, y, width, height, 8);
-  ctx.fillStyle = "rgba(255,255,255,0.1)";
+  ctx.fillStyle = colors.cardBg;
   ctx.fill();
-  ctx.strokeStyle = "rgba(255,255,255,0.18)";
+  ctx.strokeStyle = colors.cardBorder;
   ctx.stroke();
 
-  ctx.fillStyle = "rgba(255,255,255,0.72)";
+  ctx.fillStyle = colors.cardText;
   ctx.font = "700 13px Inter, sans-serif";
   ctx.fillText("Live Model Snapshot", x + 22, y + 32);
 
-  ctx.strokeStyle = "rgba(255,255,255,0.12)";
+  ctx.strokeStyle = colors.cardGrid;
   ctx.lineWidth = 1;
   for (let i = 1; i < 6; i += 1) {
     const gy = y + 50 + i * ((height - 72) / 6);
@@ -44,7 +48,7 @@ function drawMonitorCard(ctx, x, y, width, height, phase) {
     ctx.stroke();
   }
 
-  ctx.strokeStyle = "#7ae0c7";
+  ctx.strokeStyle = colors.trace;
   ctx.lineWidth = 3;
   ctx.beginPath();
   const startX = x + 22;
@@ -66,14 +70,14 @@ function drawMonitorCard(ctx, x, y, width, height, phase) {
   const gaugeY = y + 42;
   ctx.beginPath();
   ctx.arc(gaugeX, gaugeY, 34, -Math.PI / 2, Math.PI * 1.15);
-  ctx.strokeStyle = "rgba(255,255,255,0.14)";
+  ctx.strokeStyle = colors.gaugeTrack;
   ctx.lineWidth = 9;
   ctx.stroke();
   ctx.beginPath();
   ctx.arc(gaugeX, gaugeY, 34, -Math.PI / 2, Math.PI * 0.72);
-  ctx.strokeStyle = "#d99721";
+  ctx.strokeStyle = colors.amber;
   ctx.stroke();
-  ctx.fillStyle = "#fff";
+  ctx.fillStyle = colors.cardText;
   ctx.font = "800 18px Inter, sans-serif";
   ctx.fillText("70%", gaugeX - 18, gaugeY + 7);
 }
@@ -83,13 +87,26 @@ function drawHero(time = 0) {
   const width = rect.width;
   const height = rect.height;
   const phase = time / 1000;
+  const colors = {
+    bg: cssVar("--hero-canvas-bg", "#eef7f5"),
+    grid: cssVar("--hero-canvas-grid", "rgba(16, 131, 111, 0.075)"),
+    cardBg: cssVar("--hero-card-bg", "rgba(255,255,255,0.82)"),
+    cardBorder: cssVar("--hero-card-border", "rgba(16,131,111,0.18)"),
+    cardText: cssVar("--hero-card-text", "#25344c"),
+    cardGrid: cssVar("--hero-card-grid", "rgba(37,52,76,0.12)"),
+    trace: cssVar("--hero-trace", "#10836f"),
+    gaugeTrack: cssVar("--hero-gauge-track", "rgba(37,52,76,0.14)"),
+    amber: cssVar("--amber", "#d99721"),
+    dotCoral: cssVar("--hero-dot-coral", "rgba(216,79,53,0.82)"),
+    dotTeal: cssVar("--hero-dot-teal", "rgba(16,131,111,0.72)"),
+  };
 
   heroContext.clearRect(0, 0, width, height);
-  heroContext.fillStyle = "#101923";
+  heroContext.fillStyle = colors.bg;
   heroContext.fillRect(0, 0, width, height);
 
   for (let y = 0; y < height; y += 34) {
-    heroContext.strokeStyle = "rgba(255,255,255,0.055)";
+    heroContext.strokeStyle = colors.grid;
     heroContext.lineWidth = 1;
     heroContext.beginPath();
     heroContext.moveTo(0, y);
@@ -98,7 +115,7 @@ function drawHero(time = 0) {
   }
 
   for (let x = 0; x < width; x += 34) {
-    heroContext.strokeStyle = "rgba(255,255,255,0.04)";
+    heroContext.strokeStyle = colors.grid;
     heroContext.beginPath();
     heroContext.moveTo(x, 0);
     heroContext.lineTo(x, height);
@@ -115,15 +132,16 @@ function drawHero(time = 0) {
       cardWidth,
       cardHeight,
       phase,
+      colors,
     );
   }
 
-  heroContext.fillStyle = "rgba(216,79,53,0.82)";
+  heroContext.fillStyle = colors.dotCoral;
   heroContext.beginPath();
   heroContext.arc(width * 0.82, height * 0.68, 8 + Math.sin(phase * 2) * 2, 0, Math.PI * 2);
   heroContext.fill();
 
-  heroContext.fillStyle = "rgba(16,131,111,0.72)";
+  heroContext.fillStyle = colors.dotTeal;
   heroContext.beginPath();
   heroContext.arc(width * 0.74, height * 0.78, 6 + Math.cos(phase * 1.6) * 2, 0, Math.PI * 2);
   heroContext.fill();

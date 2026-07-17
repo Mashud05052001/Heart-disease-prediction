@@ -1,0 +1,817 @@
+HEART DISEASE PREDICTION MODEL
+LAB REPORT DETAILS
+
+Project Name:
+Heart Disease Prediction Using Machine Learning
+
+Prepared For:
+Machine Learning / Artificial Intelligence Lab Report
+
+Project Type:
+Binary classification model with a graphical user interface
+
+
+1. INTRODUCTION
+
+Heart disease is one of the most serious health problems in the world. Many
+people suffer from heart-related conditions, and early risk estimation can help
+people become more aware of their health. In this project, a machine learning
+model is used to predict whether a person may have heart disease or not based on
+some medical and clinical input values.
+
+The model does not replace a doctor. It is not a medical device. It is only an
+educational machine learning project. The purpose of this project is to show how
+a machine learning model can learn from a tabular dataset and then make a
+prediction for a new patient profile.
+
+The project includes:
+
+- A heart disease dataset in CSV format.
+- A trained machine learning model saved as a joblib file.
+- An improved trained model saved as another joblib file.
+- Python scripts for running and evaluating the model.
+- A Flask-based web application.
+- A beautiful HTML, CSS, and JavaScript graphical user interface.
+
+
+2. MAIN OBJECTIVE
+
+The main objective of this project is to build and run a heart disease
+prediction system. The system takes medical input values from the user and gives
+a prediction about the possibility of heart disease.
+
+The output of the model is binary:
+
+0 = No heart disease predicted
+1 = Heart disease predicted
+
+The system also shows the probability of heart disease. This probability helps
+the user understand how confident the model is about the prediction.
+
+
+3. PROBLEM STATEMENT
+
+The problem is to predict whether a patient has heart disease or not using
+structured medical data.
+
+This is a supervised machine learning problem because the dataset already has
+input features and the correct output label. The model learns the relationship
+between the input values and the target label.
+
+Since there are only two possible output classes, this is a binary
+classification problem.
+
+
+4. DATASET INFORMATION
+
+Dataset file name:
+heart-disease.csv
+
+Number of rows:
+303
+
+Number of columns:
+14
+
+Number of input features:
+13
+
+Number of target columns:
+1
+
+Target column name:
+target
+
+Target distribution:
+
+- target = 1: 165 records
+- target = 0: 138 records
+
+This means the dataset is fairly balanced. There are slightly more records of
+patients with heart disease than records of patients without heart disease.
+
+
+5. INPUT FEATURES
+
+The model uses 13 input features. These features are medical and clinical values.
+Some values are continuous numeric values, and some values are encoded category
+values.
+
+The features are:
+
+1. age
+   This means the age of the patient in years.
+
+2. sex
+   This is the encoded sex value.
+   In this dataset, commonly:
+   0 = female
+   1 = male
+
+3. cp
+   This means chest pain type.
+   It is an encoded categorical value.
+   Values can be 0, 1, 2, or 3.
+
+4. trestbps
+   This means resting blood pressure.
+   It is measured in mm Hg.
+
+5. chol
+   This means serum cholesterol.
+   It is measured in mg/dL.
+
+6. fbs
+   This means fasting blood sugar.
+   It is a binary encoded value.
+   0 = fasting blood sugar is not greater than 120 mg/dL
+   1 = fasting blood sugar is greater than 120 mg/dL
+
+7. restecg
+   This means resting electrocardiographic result.
+   It is an encoded categorical value.
+   Values can be 0, 1, or 2.
+
+8. thalach
+   This means maximum heart rate achieved.
+
+9. exang
+   This means exercise-induced angina.
+   It is a binary encoded value.
+   0 = no
+   1 = yes
+
+10. oldpeak
+    This means ST depression induced by exercise relative to rest.
+
+11. slope
+    This means the slope of the peak exercise ST segment.
+    It is an encoded categorical value.
+    Values can be 0, 1, or 2.
+
+12. ca
+    This means the number of major vessels.
+    It is an encoded value.
+    Values can be 0, 1, 2, 3, or 4.
+
+13. thal
+    This means thalassemia category.
+    It is an encoded categorical value.
+    Values can be 0, 1, 2, or 3.
+
+Important note:
+The categorical values must use the same encoding as the training dataset.
+If the encoding is changed, the model prediction may become incorrect.
+
+
+6. TARGET VARIABLE
+
+The target variable is named target.
+
+The target has two possible values:
+
+0 = No heart disease
+1 = Heart disease present
+
+The model learns to predict this target value from the 13 input features.
+
+
+7. DATA PREPARATION
+
+The dataset was loaded using pandas. The input features and target column were
+separated.
+
+The input data was stored in X.
+The target data was stored in y.
+
+The dataset was divided into training data and testing data.
+
+Train-test split:
+
+- Training data: 242 rows
+- Testing data: 61 rows
+- Test size: 20 percent
+- Random state: 42
+
+The random state was used so that the train-test split remains the same every
+time the code is run. This helps make the result reproducible.
+
+
+8. MODELS USED IN THE ORIGINAL NOTEBOOK
+
+Several machine learning algorithms were explored in the notebook. The main
+models were:
+
+1. K-Nearest Neighbors
+2. Logistic Regression
+3. Random Forest Classifier
+
+The notebook compared the performance of these models. After comparison and
+tuning, a Random Forest model was saved as the original model file.
+
+
+9. ORIGINAL SAVED MODEL
+
+Original model file:
+heart_disease_model.joblib
+
+Original model type:
+RandomForestClassifier
+
+Important hyperparameters:
+
+- n_estimators = 210
+- max_depth = 3
+- min_samples_split = 4
+- min_samples_leaf = 19
+
+This model was trained and saved using joblib.
+
+The original model was able to run successfully, but it showed a scikit-learn
+version warning on this computer. The warning happened because the model was
+saved with a slightly different scikit-learn version than the version currently
+installed locally.
+
+This does not always break the model, but it is better to train and save a local
+model again to avoid compatibility problems.
+
+
+10. ORIGINAL MODEL TEST RESULT
+
+The original saved model was evaluated on the same 20 percent test split.
+
+Original model metrics:
+
+- Accuracy: 0.8689
+- Precision: 0.8529
+- Recall: 0.9062
+- F1 score: 0.8788
+- ROC-AUC: 0.9364
+
+Original confusion matrix:
+
+                Predicted 0    Predicted 1
+Actual 0            24             5
+Actual 1             3            29
+
+Meaning of the confusion matrix:
+
+- True Negative = 24
+- False Positive = 5
+- False Negative = 3
+- True Positive = 29
+
+The original model correctly detected 29 out of 32 heart disease cases in the
+test set.
+
+
+11. IMPROVED MODEL
+
+An improved model was created to get better performance while keeping the
+prediction process reliable.
+
+Improved model file:
+heart_disease_model_improved.joblib
+
+Improved model type:
+Soft Voting Classifier
+
+The improved model combines:
+
+1. Logistic Regression pipeline
+2. Random Forest Classifier
+
+The model uses soft voting. Soft voting means that the model combines the
+predicted probabilities of the individual models and then makes a final
+prediction.
+
+This is useful because different models may learn different patterns from the
+same data. Combining them can sometimes give better and more stable results.
+
+
+12. IMPROVED MODEL PIPELINE
+
+The improved model uses a preprocessing pipeline for the Logistic Regression
+part.
+
+Numeric features:
+
+- age
+- trestbps
+- chol
+- thalach
+- oldpeak
+
+For numeric features:
+
+- Missing values are handled using median imputation.
+- Values are scaled using StandardScaler.
+
+Categorical features:
+
+- sex
+- cp
+- fbs
+- restecg
+- exang
+- slope
+- ca
+- thal
+
+For categorical features:
+
+- Missing values are handled using the most frequent value.
+- Categories are converted using OneHotEncoder.
+- Unknown categories are ignored safely during prediction.
+
+The Random Forest part uses the encoded numeric values directly, similar to the
+original notebook approach.
+
+
+13. IMPROVED MODEL TRAINING
+
+The improved model was trained using the same heart-disease.csv dataset.
+
+The training script:
+train_improved_model.py
+
+The script performs these steps:
+
+1. Load the dataset.
+2. Separate input features and target.
+3. Split the data into training and testing sets.
+4. Build the improved model.
+5. Tune selected hyperparameters using GridSearchCV.
+6. Evaluate the original saved model.
+7. Evaluate the improved model.
+8. Save the improved model as heart_disease_model_improved.joblib.
+9. Save the model report as model_report.json.
+
+The search scoring metric used during tuning was F1 score.
+
+Best parameters found:
+
+- lr__model__C = 10.0
+- lr__model__class_weight = None
+- weights = [1, 2]
+
+This means the Random Forest part was given more weight than the Logistic
+Regression part in the final soft voting model.
+
+
+14. IMPROVED MODEL TEST RESULT
+
+The improved model was evaluated on the same 20 percent test split.
+
+Improved model metrics:
+
+- Accuracy: 0.9016
+- Precision: 0.9062
+- Recall: 0.9062
+- F1 score: 0.9062
+- ROC-AUC: 0.9375
+
+Improved confusion matrix:
+
+                Predicted 0    Predicted 1
+Actual 0            26             3
+Actual 1             3            29
+
+Meaning of the confusion matrix:
+
+- True Negative = 26
+- False Positive = 3
+- False Negative = 3
+- True Positive = 29
+
+The improved model correctly predicted 55 out of 61 test cases.
+
+The improved model reduced false positives from 5 to 3 compared with the
+original model. It also kept the false negatives at 3. This is a useful
+improvement because the model became more accurate without increasing the number
+of missed heart disease cases in this test split.
+
+
+15. COMPARISON BETWEEN ORIGINAL AND IMPROVED MODEL
+
+Original model:
+
+- Accuracy: 86.89 percent
+- Precision: 85.29 percent
+- Recall: 90.62 percent
+- F1 score: 87.88 percent
+- ROC-AUC: 93.64 percent
+
+Improved model:
+
+- Accuracy: 90.16 percent
+- Precision: 90.62 percent
+- Recall: 90.62 percent
+- F1 score: 90.62 percent
+- ROC-AUC: 93.75 percent
+
+The improved model performs better in accuracy, precision, F1 score, and ROC-AUC.
+The recall stayed the same on the test split.
+
+This means the improved model is a better choice for the local web application.
+
+
+16. CROSS-VALIDATION RESULT
+
+The improved model was also evaluated using 5-fold cross-validation.
+
+5-fold cross-validation means the dataset is divided into 5 parts. The model is
+trained and tested multiple times using different parts of the data. This gives a
+more general idea of model performance.
+
+Improved model 5-fold cross-validation mean metrics:
+
+- Accuracy: 0.8647
+- Precision: 0.8569
+- Recall: 0.9152
+- F1 score: 0.8828
+- ROC-AUC: 0.9204
+
+These results show that the model performs reasonably well across multiple data
+splits.
+
+
+17. WHY ACCURACY ALONE IS NOT ENOUGH
+
+Accuracy is useful, but it is not enough for a health-related prediction model.
+In heart disease prediction, false negatives are especially important.
+
+A false negative means:
+The model predicts no heart disease, but the patient actually has heart disease.
+
+This can be dangerous in real medical use. For this reason, recall is also very
+important.
+
+Recall means:
+Out of all actual heart disease cases, how many were correctly found by the
+model.
+
+The improved model has a recall of 90.62 percent on the holdout test split and
+91.52 percent mean recall in 5-fold cross-validation.
+
+
+18. MODEL OUTPUT
+
+The model gives two main outputs:
+
+1. Prediction class
+2. Probability of heart disease
+
+Prediction class:
+
+0 = No heart disease predicted
+1 = Heart disease predicted
+
+Probability:
+
+The probability is a value between 0 and 1.
+
+Example:
+
+0.05 means about 5 percent probability.
+0.55 means about 55 percent probability.
+0.95 means about 95 percent probability.
+
+In the web interface, this value is shown as a percentage.
+
+
+19. SAMPLE PROFILES IN THE GUI
+
+The prediction page includes three sample buttons:
+
+1. Low
+2. Medium
+3. High
+
+These samples are taken from real rows in the dataset and tested with the
+improved model.
+
+Low sample:
+
+- Estimated probability: about 5.8 percent
+- Risk band: Lower estimated risk
+- Prediction: No heart disease
+
+Medium sample:
+
+- Estimated probability: about 55.3 percent
+- Risk band: Elevated estimated risk
+- Prediction: Heart disease present
+
+High sample:
+
+- Estimated probability: about 94.8 percent
+- Risk band: High estimated risk
+- Prediction: Heart disease present
+
+These buttons are useful for demonstration because they show how the interface
+changes for different model outputs.
+
+
+20. MODEL FILES
+
+Important model-related files:
+
+1. heart-disease.csv
+   This is the dataset.
+
+2. heart_disease_model.joblib
+   This is the original saved Random Forest model.
+
+3. heart_disease_model_improved.joblib
+   This is the improved saved model used by the GUI.
+
+4. train_improved_model.py
+   This script trains the improved model and saves the model report.
+
+5. run_model.py
+   This script runs and evaluates a saved model from the command line.
+
+6. model_report.json
+   This file stores metrics and training details of the model.
+
+
+21. HOW TO RUN THE MODEL FROM COMMAND LINE
+
+To run the original model:
+
+python run_model.py --model heart_disease_model.joblib
+
+To train the improved model:
+
+python train_improved_model.py
+
+To run the improved model:
+
+python run_model.py --model heart_disease_model_improved.joblib
+
+
+22. WEB APPLICATION
+
+The project also includes a Flask web application.
+
+Main backend file:
+app.py
+
+The Flask app loads the saved model and provides routes for the web interface.
+
+Important routes:
+
+1. /
+   This is the homepage.
+
+2. /prediction
+   This is the prediction page.
+
+3. /predict
+   This is the API route that receives input values and returns prediction
+   results.
+
+4. /health
+   This route checks whether the app is running and which model is loaded.
+
+The app uses the improved model by default:
+heart_disease_model_improved.joblib
+
+If the improved model is not available, the app can fall back to the original
+model:
+heart_disease_model.joblib
+
+
+23. GRAPHICAL USER INTERFACE
+
+The GUI was built using:
+
+- HTML
+- CSS
+- JavaScript
+- Flask templates
+
+Important GUI files:
+
+1. templates/index.html
+   This file contains the homepage layout.
+
+2. templates/prediction.html
+   This file contains the prediction page layout.
+
+3. static/style.css
+   This file contains the complete design and responsive styling.
+
+4. static/app.js
+   This file handles prediction page interactivity.
+
+5. static/home.js
+   This file handles the animated homepage canvas.
+
+6. static/theme.js
+   This file handles the light and dark theme feature.
+
+
+24. HOMEPAGE DETAILS
+
+The homepage is designed as the entry point of the application.
+
+The homepage includes:
+
+- Project brand name: Heart Risk AI
+- A hero section
+- Animated clinical monitor style background
+- Start Prediction button
+- Model Summary button
+- Model performance metrics
+- Detailed model summary section
+
+The model summary section shows:
+
+- Active model artifact
+- Model type
+- Dataset size
+- Number of features
+- Holdout accuracy
+- Precision
+- Recall
+- F1 score
+- 5-fold cross-validation result
+- Holdout confusion matrix
+
+The homepage also supports both light mode and dark mode.
+
+
+25. PREDICTION PAGE DETAILS
+
+The prediction page is the main working page of the project.
+
+The prediction page includes:
+
+- Patient input form
+- Preset sample buttons
+- Vitals section
+- Clinical categories section
+- Binary findings section
+- Predict Risk button
+- Reset button
+- Live inference result panel
+- ECG-style animated result strip
+- Probability gauge
+- Risk label
+- Model performance metrics
+- Important input signal list
+- Medical disclaimer
+
+The prediction form accepts all 13 input features required by the model.
+
+When the user clicks Predict Risk, JavaScript collects the input values and sends
+them to the Flask /predict route as JSON data.
+
+The Flask backend converts the input into a pandas DataFrame and passes it to the
+loaded machine learning model.
+
+The model returns:
+
+- Prediction class
+- Probability of heart disease
+- Risk band
+- Important displayed input values
+
+The result is then shown on the same page without reloading the page.
+
+
+26. THEME FEATURE
+
+The web interface includes a theme switch.
+
+The user can switch between:
+
+- Light mode
+- Dark mode
+
+The selected theme is stored in the browser using localStorage. This means the
+theme choice remains saved even if the page is refreshed.
+
+The theme affects:
+
+- Homepage
+- Prediction page
+- Navigation bar
+- Cards
+- Input fields
+- Result panel
+- ECG canvas
+- Model summary section
+
+This makes the interface more user-friendly and visually attractive.
+
+
+27. DESIGN FEATURES OF THE GUI
+
+The GUI is designed to be clean, modern, and easy to use.
+
+Important design features:
+
+- Clear homepage
+- Separate prediction page
+- Simple navigation
+- Clean input fields
+- Slider controls for numeric values
+- Select boxes for categorical values
+- Toggle-style controls for binary values
+- Beautiful result card
+- Probability gauge
+- ECG-style visual element
+- Responsive layout for different screen sizes
+- Light and dark theme support
+
+The GUI helps users understand the model output more easily than a command-line
+program.
+
+
+28. LIMITATIONS OF THE PROJECT
+
+This project has some limitations:
+
+1. Small dataset
+   The dataset has only 303 rows. This is small for a real medical machine
+   learning system.
+
+2. Educational purpose only
+   The model is not clinically validated.
+
+3. Not a medical device
+   The model should not be used for real diagnosis.
+
+4. Encoded categorical values
+   Some medical categories are encoded as numbers. If the encoding is not
+   understood correctly, input mistakes can happen.
+
+5. Dataset may not represent all populations
+   The dataset may not include enough diversity from different age groups,
+   regions, and medical backgrounds.
+
+6. Model can make wrong predictions
+   No machine learning model is perfect. False positives and false negatives are
+   possible.
+
+
+29. ETHICAL AND MEDICAL WARNING
+
+This model is only for learning and demonstration.
+
+It should not be used as the only basis for medical decisions.
+
+If a person has chest pain, breathing difficulty, heart-related symptoms, or any
+health concern, they should contact a qualified doctor or medical professional.
+
+The prediction result should be treated as a machine learning output, not as a
+medical diagnosis.
+
+
+30. FUTURE IMPROVEMENTS
+
+This project can be improved in several ways:
+
+1. Use a larger dataset.
+2. Use more recent and diverse medical data.
+3. Add better medical explanations for categorical values.
+4. Add SHAP or feature contribution explanations.
+5. Add user input validation messages in the GUI.
+6. Add charts for feature importance.
+7. Add model comparison inside the web interface.
+8. Add a database to store prediction history.
+9. Add login and admin dashboard features.
+10. Deploy the app online using a cloud platform.
+
+
+31. CONCLUSION
+
+This project successfully builds a heart disease prediction system using machine
+learning. The original model used a Random Forest Classifier. An improved model
+was created using a soft voting ensemble of Logistic Regression and Random
+Forest. The improved model achieved better test accuracy and F1 score than the
+original model.
+
+The final system includes both backend model prediction and a beautiful web
+interface. The GUI allows users to enter patient values, choose sample profiles,
+switch between light and dark themes, and view the prediction result in a clear
+and attractive way.
+
+The project is useful for understanding the complete machine learning workflow:
+
+- Data loading
+- Data splitting
+- Model training
+- Model tuning
+- Model evaluation
+- Model saving
+- Backend integration
+- Frontend GUI design
+- User interaction
+
+Overall, this is a complete educational machine learning project that combines
+data science, model development, and web application design.
+
