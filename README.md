@@ -171,7 +171,7 @@ python run_model.py --model heart_disease_model_improved.joblib
 python app.py
 ```
 
-Open `http://127.0.0.1:5000` in your browser. The GUI uses `heart_disease_model_improved.joblib` when it is available, and falls back to the original saved model otherwise.
+Open `http://127.0.0.1:5000` in your browser for the homepage, then choose **Start Prediction** to open `http://127.0.0.1:5000/prediction`. The GUI uses `heart_disease_model_improved.joblib` when it is available, and falls back to the original saved model otherwise.
 
 ### 2) Load the model from Hugging Face Hub
 ```python

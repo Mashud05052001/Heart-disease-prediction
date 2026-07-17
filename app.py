@@ -116,6 +116,14 @@ def create_app() -> Flask:
             "index.html",
             model_name=model_path.name,
             report=report,
+        )
+
+    @app.get("/prediction")
+    def prediction_page():
+        return render_template(
+            "prediction.html",
+            model_name=model_path.name,
+            report=report,
             samples=SAMPLE_PROFILES,
         )
 
@@ -156,10 +164,32 @@ def load_report() -> dict[str, Any]:
 
     report = json.loads(REPORT_PATH.read_text(encoding="utf-8"))
     model_report = report.get("improved_model") or report.get("original_model") or {}
+    test_metrics = model_report.get("test_metrics", {})
+    confusion_matrix = test_metrics.get("confusion_matrix") or [[0, 0], [0, 0]]
+    try:
+        tn, fp = confusion_matrix[0]
+        fn, tp = confusion_matrix[1]
+    except (TypeError, ValueError, IndexError):
+        tn = fp = fn = tp = 0
+
     return {
-        "test_metrics": model_report.get("test_metrics", {}),
+        "dataset": report.get("dataset", "heart-disease.csv"),
+        "rows": report.get("rows", 0),
+        "feature_count": len(report.get("features", [])),
+        "target_counts": report.get("target_counts", {}),
+        "split": report.get("split", {}),
+        "search": report.get("search", {}),
+        "model_path": model_report.get("path", ""),
+        "model_type": model_report.get("model_type", "RandomForestClassifier"),
+        "test_metrics": test_metrics,
         "cv_metrics": model_report.get("five_fold_cv_metrics")
         or model_report.get("reference_5_fold_cv_metrics", {}),
+        "confusion": {
+            "tn": tn,
+            "fp": fp,
+            "fn": fn,
+            "tp": tp,
+        },
     }
 
 
